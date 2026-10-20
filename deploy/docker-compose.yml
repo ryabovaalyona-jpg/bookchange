@@ -1,0 +1,54 @@
+# Пилот: приложение, PostgreSQL и Caddy с HTTPS на одной машине Yandex Cloud (PRD, раздел 11).
+# Запуск на сервере из папки с этим файлом, .env и Caddyfile: docker compose up -d
+
+services:
+  app:
+    image: knizhki:latest
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      DATABASE_URL: postgres://knizhki:${POSTGRES_PASSWORD}@db:5432/knizhki
+      UPLOAD_DIR: /data/uploads
+    volumes:
+      - uploads:/data/uploads
+    depends_on:
+      db:
+        condition: service_healthy
+    mem_limit: 900m
+
+  db:
+    image: postgres:18-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: knizhki
+      POSTGRES_DB: knizhki
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - pgdata:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U knizhki"]
+      interval: 5s
+      retries: 20
+    mem_limit: 400m
+
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    environment:
+      DOMAIN: ${DOMAIN}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - app
+
+volumes:
+  pgdata:
+  uploads:
+  caddy_data:
+  caddy_config:

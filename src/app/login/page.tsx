@@ -1,9 +1,27 @@
 import type { Metadata } from "next";
-import { Button } from "@/components/ui";
+import { redirect } from "next/navigation";
+import { buttonClass } from "@/components/ui";
+import { providerOptions } from "@/server/auth/providers";
+import { getCurrentUser, safeNext } from "@/server/session";
 
 export const metadata: Metadata = { title: "Вход", robots: { index: false } };
 
-export default function LoginPage() {
+const ERRORS: Record<string, string> = {
+  expired: "Вход не завершился. Попробуйте ещё раз.",
+  cancelled: "Вы отменили вход.",
+  provider: "Не получилось войти. Попробуйте ещё раз или другим способом.",
+  blocked: "Этот аккаунт заблокирован. Если это ошибка — напишите нам.",
+  rate: "Слишком много попыток. Подождите несколько минут.",
+};
+
+export default async function LoginPage({ searchParams }: PageProps<"/login">) {
+  const sp = await searchParams;
+  const next = safeNext(sp.next);
+  if (await getCurrentUser()) redirect(next);
+
+  const error = typeof sp.error === "string" ? ERRORS[sp.error] : undefined;
+  const providers = providerOptions().filter((provider) => provider.enabled);
+
   return (
     <div className="mx-auto flex max-w-sm flex-col gap-5 py-6">
       <div>
@@ -13,18 +31,28 @@ export default function LoginPage() {
         </p>
       </div>
 
+      {error && (
+        <p role="alert" className="rounded-[var(--radius-control)] border border-line bg-surface p-3">
+          {error}
+        </p>
+      )}
+
       <div className="flex flex-col gap-3">
-        <Button type="button" disabled>
-          Войти через Яндекс ID
-        </Button>
-        <Button type="button" variant="secondary" disabled>
-          Войти через VK ID
-        </Button>
+        {providers.map((provider, index) => (
+          <a
+            key={provider.id}
+            href={`/auth/${provider.id}/start?next=${encodeURIComponent(next)}`}
+            className={buttonClass(index === 0 ? "primary" : "secondary")}
+          >
+            Войти через {provider.label}
+          </a>
+        ))}
+        {providers.length === 0 && (
+          <p className="text-ink-soft">Вход пока не настроен. Загляните чуть позже.</p>
+        )}
       </div>
 
-      <p className="text-sm text-ink-soft">
-        Без паролей. Вход подключим следующим шагом — пока кнопки не работают.
-      </p>
+      <p className="text-sm text-ink-soft">Без паролей. Почту никто, кроме вас, не увидит.</p>
     </div>
   );
 }

@@ -26,16 +26,10 @@
 
 Тема включается атрибутом `data-theme="paper"` или `data-theme="night"` на любом блоке.
 
-## Три варианта на выбор
+## Вариант «Двойной»
 
-| Вариант | Как выглядит |
-| --- | --- |
-| Двойной | Тёмная шапка ANIMI, светлая полка. Обложки на светлом фоне |
-| Бумага | Всё светлое, бирюзовый только в тексте |
-| Ночь | Всё тёмное, как сайт ANIMI |
-
-Переключатель — полоса наверху каждой страницы. После выбора владельца остаётся один вариант,
-переключатель удаляется.
+Выбран владельцем 20 октября 2026: тёмная шапка ANIMI (`data-theme="night"`), светлая полка
+(`data-theme="paper"` на `<html>`). Обложки — на светлом фоне.
 
 ## Шрифты
 
@@ -63,5 +57,5 @@ Google Fonts не подключаем.
 | --- | --- |
 | `Button`, `ButtonLink`, `Chip`, `Tag`, `Badge`, `SectionTitle`, `EmptyState` | `src/components/ui.tsx` |
 | `BookCover`, `BookCard`, `BookGrid`, `ModeBadge`, `StatusBadge` | `src/components/book.tsx` |
-| `SiteHeader`, `SiteFooter`, `StyleSwitcher` | `src/components/chrome.tsx` |
+| `SiteHeader`, `SiteFooter` | `src/components/chrome.tsx` |
 | `BottomNav` | `src/components/bottom-nav.tsx` |

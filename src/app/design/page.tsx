@@ -1,10 +1,28 @@
 import type { Metadata } from "next";
 import { BookCard, ModeBadge } from "@/components/book";
 import { Badge, Button, Chip, EmptyState, SectionTitle, Tag } from "@/components/ui";
-import { DEMO_BOOKS } from "@/lib/demo-books";
-import { STYLE_VARIANTS } from "@/lib/style-variant";
+import type { PublicBook } from "@/server/books";
 
 export const metadata: Metadata = { title: "Стиль", robots: { index: false } };
+
+const SAMPLE: PublicBook = {
+  id: 0,
+  title: "Вафельное сердце",
+  author: "Мария Парр",
+  ageGroups: ["7-9", "10-12"],
+  category: "stories",
+  themes: ["friendship"],
+  condition: "new",
+  mode: "lend",
+  lendDays: 30,
+  note: null,
+  status: "available",
+  createdAt: "2026-10-04T10:00:00Z",
+  owner: { id: "", displayName: "Ольга" },
+  zone: "У парка",
+  photos: [],
+};
+const SAMPLE_RESERVED: PublicBook = { ...SAMPLE, title: "Городок", author: "Ротраут Сузанна Бернер", mode: "gift", lendDays: null, status: "reserved", ageGroups: ["0-2", "3-4"], condition: "worn" };
 
 const TOKENS = [
   { name: "bg", label: "Фон" },
@@ -41,27 +59,14 @@ export default function DesignPage() {
       <div>
         <h1 className="font-display text-[32px] leading-[1.1] font-semibold">Стиль сервиса</h1>
         <p className="mt-2 text-ink-soft">
-          Цвета и шрифты ANIMI. Переключите вариант в полосе наверху, откройте полку и книгу —
-          и выберите один.
+          Цвета и шрифты ANIMI. Вариант «Двойной»: тёмная шапка, светлая полка.
         </p>
       </div>
 
       <section className="flex flex-col gap-3">
-        <SectionTitle>Три варианта</SectionTitle>
-        <ul className="flex flex-col gap-2">
-          {STYLE_VARIANTS.map((variant) => (
-            <li key={variant.id}>
-              <span className="font-semibold">{variant.label}</span>
-              <span className="text-ink-soft"> — {variant.hint}</span>
-            </li>
-          ))}
-        </ul>
-      </section>
-
-      <section className="flex flex-col gap-3">
         <SectionTitle>Цвета</SectionTitle>
-        <Palette theme="paper" title="Бумага" />
-        <Palette theme="night" title="Ночь" />
+        <Palette theme="paper" title="Полка" />
+        <Palette theme="night" title="Шапка" />
       </section>
 
       <section className="flex flex-col gap-3">
@@ -99,8 +104,8 @@ export default function DesignPage() {
           <Chip href="/design">3–4</Chip>
         </div>
         <div className="flex flex-wrap items-center gap-2">
-          <ModeBadge book={DEMO_BOOKS[0]} />
-          <ModeBadge book={DEMO_BOOKS[1]} />
+          <ModeBadge book={SAMPLE_RESERVED} />
+          <ModeBadge book={SAMPLE} />
           <Badge>Обещана</Badge>
           <Badge>На руках</Badge>
           <Tag>5–6</Tag>
@@ -111,8 +116,8 @@ export default function DesignPage() {
       <section className="flex flex-col gap-3">
         <SectionTitle>Карточка книги</SectionTitle>
         <div className="grid grid-cols-2 gap-3">
-          <BookCard book={DEMO_BOOKS[1]} />
-          <BookCard book={DEMO_BOOKS[2]} />
+          <BookCard book={SAMPLE} />
+          <BookCard book={SAMPLE_RESERVED} />
         </div>
       </section>
 

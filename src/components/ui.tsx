@@ -16,6 +16,11 @@ const BUTTON_VARIANTS = {
 
 type ButtonVariant = keyof typeof BUTTON_VARIANTS;
 
+/** Классы кнопки — для обычной ссылки `<a>` на обработчик маршрута (вход, выход наружу). */
+export function buttonClass(variant: ButtonVariant = "primary", className?: string) {
+  return cx(BUTTON_BASE, BUTTON_VARIANTS[variant], className);
+}
+
 export function Button({
   variant = "primary",
   className,

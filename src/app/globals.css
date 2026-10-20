@@ -78,3 +78,19 @@ body {
 .cover-tone-3 { background: #c98b6b; color: #0b2e30; }
 .cover-tone-4 { background: #e9dcc0; color: #0b2e30; }
 .cover-tone-5 { background: #2f6b6a; color: #f4ecdc; }
+
+/* Правовые страницы: обычный текст с заголовками и списками. */
+.legal h2 {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 1.2;
+  margin-top: 8px;
+}
+.legal ul {
+  list-style: disc;
+  padding-left: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
